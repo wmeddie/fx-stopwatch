@@ -4,14 +4,14 @@
  */
 package com.yumusoft.stopwatch
 
-import javafx.fxml.{Initializable, FXML}
+import javafx.fxml.FXML
 import javafx.scene.control.{Button, TableColumn, TableView, Label}
 import javafx.event.ActionEvent
 import java.net.URL
 import java.util.{Date, ResourceBundle}
 import javafx.animation.AnimationTimer
 
-class StopwatchController extends Initializable {
+class StopwatchController {
 
   private val StartLabel = "_Start"
   private val PauseLabel = "_Pause"
@@ -30,11 +30,13 @@ class StopwatchController extends Initializable {
 
   private val timer = new AnimationTimer() {
     def handle(currentTime: Long) {
+      val currentMillis = currentTime / 1000000
+
       startTime match {
         case Some(time) => {
-          val diff = System.currentTimeMillis() - time
+          val diff = currentMillis - time
           state += diff
-          startTime = Some(System.currentTimeMillis())
+          startTime = Some(currentMillis)
         }
         case None => {
           state = new LongTimestamp(0)
@@ -81,11 +83,6 @@ class StopwatchController extends Initializable {
   def doClear(event: ActionEvent) {
 
   }
-
-  def initialize(p1: URL, p2: ResourceBundle) {
-
-  }
-
 
   def updateTimeLabel() {
     timeLabel.setText(state.toString())
