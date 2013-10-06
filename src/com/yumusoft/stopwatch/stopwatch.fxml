@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Stopwatch. A JavaFX-based Stopwatch app.
+Copyright 2013 Eduardo Gonzalez
+See LICENSE for details.
+-->
+<?import java.lang.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.text.*?>
+
+<GridPane alignment="CENTER" hgap="10.0" minHeight="400.0" minWidth="300.0" prefHeight="400.0" prefWidth="300.0" vgap="10.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.yumusoft.stopwatch.StopwatchController">
+  <children>
+    <BorderPane minHeight="400.0" minWidth="300.0" prefHeight="400.0" prefWidth="300.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+      <center>
+        <VBox prefHeight="200.0" prefWidth="100.0">
+          <children>
+            <Label fx:id="timeLabel" alignment="CENTER" prefHeight="91.0" prefWidth="300.0" text="00:00:00.000" textAlignment="CENTER">
+              <font>
+                <Font name="System Bold" size="42.0" />
+              </font>
+            </Label>
+            <TableView fx:id="timeLogTable" prefHeight="300.0" prefWidth="300.0">
+              <columns>
+                <TableColumn prefWidth="75.0" text="Number" fx:id="numberColumn" />
+                <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="220.0" text="Time" fx:id="timeColumn" />
+              </columns>
+            </TableView>
+          </children>
+        </VBox>
+      </center>
+      <top>
+        <ToolBar>
+          <items>
+            <Button fx:id="startPauseButton" mnemonicParsing="true" onAction="#doStartPause" prefWidth="64.0" text="_Start" />
+            <Button fx:id="lapButton" mnemonicParsing="true" onAction="#doLap" prefWidth="64.0" text="_Lap" />
+            <Button fx:id="resetButton" mnemonicParsing="true" onAction="#doReset" prefWidth="64.0" text="_Reset" />
+            <Button fx:id="clearButton" mnemonicParsing="true" onAction="#doClear" prefWidth="64.0" text="C_lear" />
+          </items>
+        </ToolBar>
+      </top>
+    </BorderPane>
+  </children>
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+</GridPane>
