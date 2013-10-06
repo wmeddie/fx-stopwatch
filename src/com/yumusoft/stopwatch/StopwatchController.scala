@@ -4,25 +4,28 @@
  */
 package com.yumusoft.stopwatch
 
-import javafx.fxml.FXML
+import javafx.fxml.{Initializable, FXML}
 import javafx.scene.control.{Button, TableColumn, TableView, Label}
 import javafx.event.ActionEvent
 import java.net.URL
-import java.util.{Date, ResourceBundle}
+import java.util.ResourceBundle
 import javafx.animation.AnimationTimer
+import javafx.collections.{FXCollections, ObservableList}
+import javafx.scene.control.cell.PropertyValueFactory
 
-class StopwatchController {
+class StopwatchController extends Initializable {
 
   private val StartLabel = "_Start"
   private val PauseLabel = "_Pause"
 
   private var startTime: Option[Long] = None
   private var state: LongTimestamp = new LongTimestamp(0)
+  private val log: ObservableList[Lap] = FXCollections.observableArrayList()
 
   @FXML var timeLabel: Label = _
-  @FXML var timeLogTable: TableView[_] = _
-  @FXML var numberColumn: TableColumn[_, _] = _
-  @FXML var timeColumn: TableColumn[_, _] = _
+  @FXML var timeLogTable: TableView[Lap] = _
+  @FXML var numberColumn: TableColumn[Lap, String] = _
+  @FXML var timeColumn: TableColumn[Lap, String] = _
   @FXML var startPauseButton: Button = _
   @FXML var lapButton: Button = _
   @FXML var resetButton: Button = _
@@ -64,7 +67,7 @@ class StopwatchController {
 
   @FXML
   def doLap(event: ActionEvent) {
-
+    log.add(Lap(log.size(), state))
   }
 
   @FXML
@@ -81,11 +84,17 @@ class StopwatchController {
 
   @FXML
   def doClear(event: ActionEvent) {
-
+    log.clear()
   }
 
   def updateTimeLabel() {
     timeLabel.setText(state.toString())
   }
 
+  def initialize(url: URL, bundle: ResourceBundle) {
+    numberColumn.setCellValueFactory(new PropertyValueFactory[Lap, String]("number"))
+    timeColumn.setCellValueFactory(new PropertyValueFactory[Lap, String]("time"))
+
+    timeLogTable.setItems(log)
+  }
 }
