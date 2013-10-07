@@ -6,12 +6,13 @@ package com.yumusoft.stopwatch
 
 import javafx.fxml.{Initializable, FXML}
 import javafx.scene.control.{Button, TableColumn, TableView, Label}
-import javafx.event.ActionEvent
+import javafx.event.{EventHandler, ActionEvent}
 import java.net.URL
 import java.util.ResourceBundle
 import javafx.animation.AnimationTimer
 import javafx.collections.{FXCollections, ObservableList}
-import javafx.scene.control.cell.PropertyValueFactory
+import javafx.scene.control.cell.{TextFieldTableCell, PropertyValueFactory}
+import javafx.scene.control.TableColumn.CellEditEvent
 
 class StopwatchController extends Initializable {
 
@@ -26,6 +27,7 @@ class StopwatchController extends Initializable {
   @FXML var timeLogTable: TableView[Lap] = _
   @FXML var numberColumn: TableColumn[Lap, String] = _
   @FXML var timeColumn: TableColumn[Lap, String] = _
+  @FXML var notesColumn: TableColumn[Lap, String] = _
   @FXML var startPauseButton: Button = _
   @FXML var lapButton: Button = _
   @FXML var resetButton: Button = _
@@ -67,7 +69,7 @@ class StopwatchController extends Initializable {
 
   @FXML
   def doLap(event: ActionEvent) {
-    log.add(Lap(log.size(), state))
+    log.add(Lap(log.size() + 1, state))
   }
 
   @FXML
@@ -94,6 +96,15 @@ class StopwatchController extends Initializable {
   def initialize(url: URL, bundle: ResourceBundle) {
     numberColumn.setCellValueFactory(new PropertyValueFactory[Lap, String]("number"))
     timeColumn.setCellValueFactory(new PropertyValueFactory[Lap, String]("time"))
+    notesColumn.setCellValueFactory(new PropertyValueFactory[Lap, String]("notes"))
+    notesColumn.setCellFactory(TextFieldTableCell.forTableColumn())
+    notesColumn.setOnEditCommit(new EventHandler[CellEditEvent[Lap, String]] {
+      override def handle(event: CellEditEvent[Lap, String]) {
+        val row = event.getRowValue
+        val newVal = event.getNewValue
+        row.setNotes(newVal)
+      }
+    })
 
     timeLogTable.setItems(log)
   }

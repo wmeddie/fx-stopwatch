@@ -5,14 +5,24 @@
 package com.yumusoft.stopwatch
 
 import scala.beans.BeanProperty
+import javafx.beans.property.SimpleStringProperty
 
 case class Lap(
   @BeanProperty number: String,
-  @BeanProperty time: String
-)
+  @BeanProperty time: String,
+  notes: SimpleStringProperty) {
+
+  def getNotes = {
+    notes.get()
+  }
+
+  def setNotes(value: String) = {
+    notes.set(value)
+  }
+}
 
 object Lap {
   def apply(number: Int, time: LongTimestamp) = {
-    new Lap(number.toString, time.toString())
+    new Lap(number.toString, time.toString(), new SimpleStringProperty(""))
   }
 }
