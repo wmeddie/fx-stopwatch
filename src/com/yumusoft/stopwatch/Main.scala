@@ -14,7 +14,9 @@ class Main extends Application {
   def start(primaryStage: Stage) {
     val root: Parent = FXMLLoader.load(getClass.getResource("stopwatch.fxml"))
     primaryStage.setTitle("Stopwatch")
-    primaryStage.setScene(new Scene(root, 300, 400))
+    primaryStage.setScene(new Scene(root, 300, 420))
+    primaryStage.setMinWidth(300)
+    primaryStage.setMinHeight(200)
     primaryStage.show()
   }
 }
