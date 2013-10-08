@@ -19,11 +19,13 @@ import javafx.stage.FileChooser.ExtensionFilter
 import scala.Some
 import java.io.{File, FileWriter}
 import javafx.collections.ListChangeListener.Change
+import javafx.scene.input.{DataFormat, ClipboardContent, Clipboard}
 
 class StopwatchController extends Initializable {
 
   private val StartLabel = "_Start"
   private val PauseLabel = "_Pause"
+  private val TimeFormat = """(\d\d:\d\d:\d\d\.\d\d\d\d)""".r
 
   private var startTime: Option[Long] = None
   private var state: LongTimestamp = new LongTimestamp(0)
@@ -40,12 +42,8 @@ class StopwatchController extends Initializable {
   @FXML var lapButton: Button = _
   @FXML var resetButton: Button = _
   @FXML var clearButton: Button = _
-  @FXML var quitMenuItem: MenuItem = _
   @FXML var saveMenuItem: MenuItem = _
   @FXML var saveAsMenuItem: MenuItem = _
-  @FXML var copyMenuItem: MenuItem = _
-  @FXML var pasteMenuItem: MenuItem = _
-  @FXML var aboutMenuItem: MenuItem = _
 
   private val timer = new AnimationTimer() {
     def handle(currentNanos: Long) {
@@ -143,11 +141,11 @@ class StopwatchController extends Initializable {
 
   @FXML
   def doCopy(event: ActionEvent) {
-  }
+    val content = new ClipboardContent()
+    content.putString(state.toString())
 
-  @FXML
-  def doPaste(event: ActionEvent) {
-
+    val clipboard = Clipboard.getSystemClipboard
+    clipboard.setContent(content)
   }
 
   @FXML
