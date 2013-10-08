@@ -10,14 +10,14 @@ import javafx.beans.property.SimpleStringProperty
 case class Lap(
   @BeanProperty number: String,
   @BeanProperty time: String,
-  notes: SimpleStringProperty) {
+  note: SimpleStringProperty) {
 
-  def getNotes = {
-    notes.get()
+  def getNote = {
+    note.get()
   }
 
-  def setNotes(value: String) = {
-    notes.set(value)
+  def setNote(value: String) = {
+    note.set(value)
   }
 }
 

@@ -5,14 +5,20 @@
 package com.yumusoft.stopwatch
 
 import javafx.fxml.{Initializable, FXML}
-import javafx.scene.control.{Button, TableColumn, TableView, Label}
+import javafx.scene.control._
 import javafx.event.{EventHandler, ActionEvent}
 import java.net.URL
 import java.util.ResourceBundle
 import javafx.animation.AnimationTimer
-import javafx.collections.{FXCollections, ObservableList}
+import javafx.collections.{ListChangeListener, FXCollections, ObservableList}
 import javafx.scene.control.cell.{TextFieldTableCell, PropertyValueFactory}
 import javafx.scene.control.TableColumn.CellEditEvent
+import javafx.application.Platform
+import javafx.stage.FileChooser
+import javafx.stage.FileChooser.ExtensionFilter
+import scala.Some
+import java.io.{File, FileWriter}
+import javafx.collections.ListChangeListener.Change
 
 class StopwatchController extends Initializable {
 
@@ -23,6 +29,8 @@ class StopwatchController extends Initializable {
   private var state: LongTimestamp = new LongTimestamp(0)
   private val log: ObservableList[Lap] = FXCollections.observableArrayList()
 
+  private var saveFile: Option[File] = None
+
   @FXML var timeLabel: Label = _
   @FXML var timeLogTable: TableView[Lap] = _
   @FXML var numberColumn: TableColumn[Lap, String] = _
@@ -32,6 +40,12 @@ class StopwatchController extends Initializable {
   @FXML var lapButton: Button = _
   @FXML var resetButton: Button = _
   @FXML var clearButton: Button = _
+  @FXML var quitMenuItem: MenuItem = _
+  @FXML var saveMenuItem: MenuItem = _
+  @FXML var saveAsMenuItem: MenuItem = _
+  @FXML var copyMenuItem: MenuItem = _
+  @FXML var pasteMenuItem: MenuItem = _
+  @FXML var aboutMenuItem: MenuItem = _
 
   private val timer = new AnimationTimer() {
     def handle(currentTime: Long) {
@@ -89,23 +103,87 @@ class StopwatchController extends Initializable {
     log.clear()
   }
 
-  def updateTimeLabel() {
+  // Menu Items
+
+  @FXML
+  def doQuit(event: ActionEvent) {
+    Platform.exit()
+  }
+
+  @FXML
+  def doSave(event: ActionEvent) {
+    if (saveFile.isEmpty) {
+      doSaveAs(event)
+    }
+
+    saveFile.map { file =>
+      val writer = new FileWriter(file)
+      val laps = log.toArray(Array[Lap]())
+
+      for (lap <- laps) {
+        writer.write(s"${lap.number},${lap.time},${lap.getNote}\n")
+      }
+      writer.close()
+    }
+  }
+
+  @FXML
+  def doSaveAs(event: ActionEvent) {
+    val fileChooser = new FileChooser()
+
+    val csvFilter = new ExtensionFilter("Comma Separated Values", "*.csv")
+    fileChooser.getExtensionFilters.add(csvFilter)
+
+    val file = fileChooser.showSaveDialog(timeLabel.getScene.getWindow)
+    if (file != null) {
+      saveFile = Some(file)
+      doSave(event)
+    }
+  }
+
+  @FXML
+  def doCopy(event: ActionEvent) {
+  }
+
+  @FXML
+  def doPaste(event: ActionEvent) {
+
+  }
+
+  @FXML
+  def doAbout(event: ActionEvent) {
+
+  }
+
+  private def updateTimeLabel() {
     timeLabel.setText(state.toString())
   }
 
   def initialize(url: URL, bundle: ResourceBundle) {
     numberColumn.setCellValueFactory(new PropertyValueFactory[Lap, String]("number"))
     timeColumn.setCellValueFactory(new PropertyValueFactory[Lap, String]("time"))
-    notesColumn.setCellValueFactory(new PropertyValueFactory[Lap, String]("notes"))
+    notesColumn.setCellValueFactory(new PropertyValueFactory[Lap, String]("note"))
     notesColumn.setCellFactory(TextFieldTableCell.forTableColumn())
     notesColumn.setOnEditCommit(new EventHandler[CellEditEvent[Lap, String]] {
       override def handle(event: CellEditEvent[Lap, String]) {
         val row = event.getRowValue
         val newVal = event.getNewValue
-        row.setNotes(newVal)
+        row.setNote(newVal)
       }
     })
 
     timeLogTable.setItems(log)
+
+    log.addListener(new ListChangeListener[Lap] {
+      def onChanged(p1: Change[_ <: Lap]) {
+        if (log.isEmpty) {
+          saveMenuItem.setDisable(true)
+          saveAsMenuItem.setDisable(true)
+        } else {
+          saveMenuItem.setDisable(false)
+          saveAsMenuItem.setDisable(false)
+        }
+      }
+    })
   }
 }
