@@ -48,8 +48,8 @@ class StopwatchController extends Initializable {
   @FXML var aboutMenuItem: MenuItem = _
 
   private val timer = new AnimationTimer() {
-    def handle(currentTime: Long) {
-      val currentMillis = currentTime / 1000000
+    def handle(currentNanos: Long) {
+      val currentMillis = System.currentTimeMillis()
 
       startTime match {
         case Some(time) => {
