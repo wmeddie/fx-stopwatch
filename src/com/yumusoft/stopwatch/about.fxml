@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<GridPane fx:id="root" hgap="14.0" maxHeight="170.0" maxWidth="300.0" minHeight="170.0" minWidth="300.0" prefHeight="170.0" prefWidth="300.0" vgap="20.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.yumusoft.stopwatch.AboutController">
+  <children>
+    <VBox maxHeight="+Infinity" maxWidth="+Infinity" minHeight="-Infinity" prefWidth="177.0" spacing="7.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+      <children>
+        <Label fx:id="messageLabel" alignment="CENTER" contentDisplay="CENTER" prefWidth="257.0" text="Stopwatch" textAlignment="CENTER" wrapText="true">
+          <font>
+            <Font name="System Bold" size="13.0" />
+          </font>
+        </Label>
+        <Label fx:id="detailsLabel" prefWidth="257.0" text="A simple stopwatch made with JavaFX" textAlignment="LEFT" wrapText="true">
+          <font>
+            <Font size="12.0" />
+          </font>
+        </Label>
+        <Label prefWidth="257.0" text="Copyright 2013 Eduardo Gonzalez" />
+      </children>
+    </VBox>
+    <Button fx:id="okButton" minWidth="80.0" mnemonicParsing="false" onAction="#doOk" text="Ok" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+  </children>
+  <columnConstraints>
+    <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" />
+    <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="+Infinity" minWidth="-Infinity" />
+  </columnConstraints>
+  <padding>
+    <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+  </padding>
+  <rowConstraints>
+    <RowConstraints maxHeight="+Infinity" minHeight="-Infinity" prefHeight="0.0" valignment="CENTER" vgrow="ALWAYS" />
+    <RowConstraints maxHeight="+Infinity" minHeight="-Infinity" prefHeight="61.0" valignment="CENTER" vgrow="ALWAYS" />
+    <RowConstraints maxHeight="+Infinity" minHeight="-Infinity" prefHeight="21.0" valignment="CENTER" vgrow="ALWAYS" />
+    <RowConstraints maxHeight="0.0" minHeight="-Infinity" prefHeight="0.0" vgrow="NEVER" />
+  </rowConstraints>
+</GridPane>

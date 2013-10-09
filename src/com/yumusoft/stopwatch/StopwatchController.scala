@@ -44,6 +44,7 @@ class StopwatchController extends Initializable {
   @FXML var clearButton: Button = _
   @FXML var saveMenuItem: MenuItem = _
   @FXML var saveAsMenuItem: MenuItem = _
+  var application: Main = _
 
   private val timer = new AnimationTimer() {
     def handle(currentNanos: Long) {
@@ -150,7 +151,7 @@ class StopwatchController extends Initializable {
 
   @FXML
   def doAbout(event: ActionEvent) {
-
+    application.showAboutDialog()
   }
 
   private def updateTimeLabel() {
