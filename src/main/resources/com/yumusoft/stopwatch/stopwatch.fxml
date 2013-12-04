@@ -16,14 +16,15 @@ See LICENSE for details.
     <center>
         <VBox prefHeight="0.0" prefWidth="0.0">
             <children>
-                <Label fx:id="timeLabel" alignment="CENTER" prefHeight="65.0" prefWidth="300.0" text="00:00:00.000"
+                <Label fx:id="timeLabel" alignment="CENTER" prefHeight="65.0" prefWidth="300.0" text="00:00:00"
                        textAlignment="CENTER" VBox.vgrow="NEVER">
                     <font>
                         <Font name="System Bold" size="42.0"/>
                     </font>
                 </Label>
                 <TextField fx:id="noteField" prefWidth="300.0" promptText="Note"/>
-                <TableView fx:id="timeLogTable" editable="true" prefHeight="300.0" prefWidth="300.0"
+                <TableView fx:id="timeLogTable" editable="true" onKeyReleased="#doTableViewKeyTyped"
+                           onMouseClicked="#doTableViewClicked" prefHeight="300.0" prefWidth="300.0"
                            VBox.vgrow="ALWAYS">
                     <columns>
                         <TableColumn editable="false" prefWidth="75.0" text="Number" fx:id="numberColumn"/>
@@ -86,7 +87,7 @@ See LICENSE for details.
                         <Button fx:id="startPauseButton" mnemonicParsing="true" onAction="#doStartPause"
                                 prefWidth="64.0" text="_Start"/>
                         <Button fx:id="lapButton" mnemonicParsing="true" onAction="#doLap" prefWidth="64.0"
-                                text="_Lap"/>
+                                text="_Log"/>
                         <Button fx:id="resetButton" mnemonicParsing="true" onAction="#doReset" prefWidth="64.0"
                                 text="_Reset"/>
                         <Button fx:id="clearButton" mnemonicParsing="true" onAction="#doClear" prefWidth="64.0"

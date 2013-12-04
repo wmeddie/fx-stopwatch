@@ -4,25 +4,41 @@
  */
 package com.yumusoft.stopwatch
 
-import scala.beans.BeanProperty
-import javafx.beans.property.SimpleStringProperty
+import javafx.beans.property.{SimpleLongProperty, SimpleStringProperty}
 
-case class Lap(
-                @BeanProperty number: String,
-                @BeanProperty time: String,
-                note: SimpleStringProperty) {
+case class Lap(numberProperty: SimpleStringProperty,
+               timeProperty: SimpleStringProperty,
+               timeStampProperty: SimpleLongProperty,
+               noteProperty: SimpleStringProperty) {
 
-  def getNote = {
-    note.get()
-  }
+  def getNumber = numberProperty.get()
 
-  def setNote(value: String) = {
-    note.set(value)
+  def getTime = timeProperty.get()
+
+  def getTimeStamp = timeStampProperty.get()
+
+  def getNote = noteProperty.get()
+
+  def setNumber = numberProperty.set _
+
+  def setTime = timeProperty.set _
+
+  def setTimeStamp = timeStampProperty.set _
+
+  def setNote = noteProperty.set _
+
+  def updateTime(newTimeStamp: LongTimestamp) {
+    timeProperty.set(newTimeStamp.toString())
+    setTimeStamp(newTimeStamp.time)
   }
 }
 
 object Lap {
   def apply(number: Int, time: LongTimestamp, note: String) = {
-    new Lap(number.toString, time.toString(), new SimpleStringProperty(note))
+    new Lap(
+      new SimpleStringProperty(number.toString),
+      new SimpleStringProperty(time.toString()),
+      new SimpleLongProperty(time.time),
+      new SimpleStringProperty(note))
   }
 }

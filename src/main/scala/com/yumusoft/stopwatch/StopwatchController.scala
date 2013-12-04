@@ -8,18 +8,20 @@ import javafx.fxml.{Initializable, FXML}
 import javafx.scene.control._
 import javafx.event.{EventHandler, ActionEvent}
 import java.net.URL
-import java.util.ResourceBundle
-import javafx.animation.AnimationTimer
+import java.util.{TimerTask, Timer, ResourceBundle}
+
+//import javafx.animation.AnimationTimer
+
 import javafx.collections.{ListChangeListener, FXCollections, ObservableList}
 import javafx.scene.control.cell.{TextFieldTableCell, PropertyValueFactory}
 import javafx.scene.control.TableColumn.CellEditEvent
 import javafx.application.Platform
 import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
-import scala.Some
 import java.io.{File, FileWriter}
 import javafx.collections.ListChangeListener.Change
-import javafx.scene.input.{ClipboardContent, Clipboard}
+import javafx.scene.input._
+import scala.Some
 
 class StopwatchController extends Initializable {
 
@@ -27,8 +29,11 @@ class StopwatchController extends Initializable {
   private val PauseLabel = "_Pause"
   private val TimeFormat = """(\d\d:\d\d:\d\d\.\d\d\d\d)""".r
 
+  @volatile
   private var startTime: Option[Long] = None
+  @volatile
   private var state: LongTimestamp = new LongTimestamp(0)
+
   private val log: ObservableList[Lap] = FXCollections.observableArrayList()
 
   private var saveFile: Option[File] = None
@@ -47,8 +52,10 @@ class StopwatchController extends Initializable {
   @FXML var noteField: TextField = _
   var application: Main = _
 
-  private val timer = new AnimationTimer() {
-    def handle(currentNanos: Long) {
+  private var timer = new Timer()
+
+  private def timerTask = new TimerTask {
+    override def run() {
       val currentMillis = System.currentTimeMillis()
 
       startTime match {
@@ -62,7 +69,11 @@ class StopwatchController extends Initializable {
         }
       }
 
-      updateTimeLabel()
+      Platform.runLater(new Runnable {
+        override def run() {
+          updateTimeLabel()
+        }
+      })
     }
   }
 
@@ -72,18 +83,33 @@ class StopwatchController extends Initializable {
       startTime = Some(System.currentTimeMillis())
 
       startPauseButton.setText(PauseLabel)
-      timer.start()
+      timer = new Timer()
+      timer.scheduleAtFixedRate(timerTask, 500, 500)
     } else {
       startTime = None
 
       startPauseButton.setText(StartLabel)
-      timer.stop()
+      timer.cancel()
     }
   }
 
   @FXML
   def doLap(event: ActionEvent) {
-    log.add(Lap(log.size() + 1, state, noteField.getText))
+    val selectedIndex = timeLogTable.getSelectionModel.getSelectedIndex
+
+    if (selectedIndex >= 0) {
+      val selectedLap = log.get(selectedIndex)
+
+      if (selectedLap.getNote == noteField.getText) {
+        selectedLap.updateTime(state)
+
+        log.set(selectedIndex, selectedLap)
+      } else {
+        log.add(Lap(log.size() + 1, state, noteField.getText))
+      }
+    } else {
+      log.add(Lap(log.size() + 1, state, noteField.getText))
+    }
   }
 
   @FXML
@@ -122,7 +148,7 @@ class StopwatchController extends Initializable {
         val laps = log.toArray(Array[Lap]())
 
         for (lap <- laps) {
-          writer.write(s"${lap.number},${lap.time},${lap.getNote}\n")
+          writer.write(s"${lap.getNumber},${lap.getTime},${lap.getNote}\n")
         }
         writer.close()
     }
@@ -154,6 +180,33 @@ class StopwatchController extends Initializable {
   @FXML
   def doAbout(event: ActionEvent) {
     application.showAboutDialog()
+  }
+
+  @FXML
+  def doTableViewClicked(event: MouseEvent) {
+    if (event.getClickCount > 1 && startTime.isEmpty && state.time == 0) {
+
+      val lap = timeLogTable.getSelectionModel.getSelectedItem
+
+      state = new LongTimestamp(lap.getTimeStamp)
+      noteField.setText(lap.getNote)
+
+      updateTimeLabel()
+    }
+  }
+
+  @FXML
+  def doTableViewKeyTyped(event: KeyEvent) {
+    val code = event.getCode
+    if (code == KeyCode.DELETE || code == KeyCode.BACK_SPACE) {
+      val selectedIndex = timeLogTable.getSelectionModel.getSelectedIndex
+      if (selectedIndex >= 0) {
+        log.remove(selectedIndex)
+        for (i <- 0 until log.size()) {
+          log.get(i).numberProperty.set((i + 1).toString)
+        }
+      }
+    }
   }
 
   private def updateTimeLabel() {

@@ -12,7 +12,8 @@ class LongTimestamp(val time: Long) extends AnyVal {
     val minutes = (time / (1000 * 60)) % 60
     val hours = (time / (1000 * 3600)) % 60
 
-    f"$hours%02d:$minutes%02d:$seconds%02d.$milliseconds%03d"
+    //f"$hours%02d:$minutes%02d:$seconds%02d.$milliseconds%03d"
+    f"$hours%02d:$minutes%02d:$seconds%02d"
   }
 
   def +(other: Long) = {
