@@ -8,9 +8,9 @@ import scala.beans.BeanProperty
 import javafx.beans.property.SimpleStringProperty
 
 case class Lap(
-  @BeanProperty number: String,
-  @BeanProperty time: String,
-  note: SimpleStringProperty) {
+                @BeanProperty number: String,
+                @BeanProperty time: String,
+                note: SimpleStringProperty) {
 
   def getNote = {
     note.get()
@@ -22,7 +22,7 @@ case class Lap(
 }
 
 object Lap {
-  def apply(number: Int, time: LongTimestamp) = {
-    new Lap(number.toString, time.toString(), new SimpleStringProperty(""))
+  def apply(number: Int, time: LongTimestamp, note: String) = {
+    new Lap(number.toString, time.toString(), new SimpleStringProperty(note))
   }
 }

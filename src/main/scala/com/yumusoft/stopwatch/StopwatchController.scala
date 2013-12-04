@@ -19,7 +19,7 @@ import javafx.stage.FileChooser.ExtensionFilter
 import scala.Some
 import java.io.{File, FileWriter}
 import javafx.collections.ListChangeListener.Change
-import javafx.scene.input.{DataFormat, ClipboardContent, Clipboard}
+import javafx.scene.input.{ClipboardContent, Clipboard}
 
 class StopwatchController extends Initializable {
 
@@ -44,6 +44,7 @@ class StopwatchController extends Initializable {
   @FXML var clearButton: Button = _
   @FXML var saveMenuItem: MenuItem = _
   @FXML var saveAsMenuItem: MenuItem = _
+  @FXML var noteField: TextField = _
   var application: Main = _
 
   private val timer = new AnimationTimer() {
@@ -82,7 +83,7 @@ class StopwatchController extends Initializable {
 
   @FXML
   def doLap(event: ActionEvent) {
-    log.add(Lap(log.size() + 1, state))
+    log.add(Lap(log.size() + 1, state, noteField.getText))
   }
 
   @FXML
@@ -115,14 +116,15 @@ class StopwatchController extends Initializable {
       doSaveAs(event)
     }
 
-    saveFile.map { file =>
-      val writer = new FileWriter(file)
-      val laps = log.toArray(Array[Lap]())
+    saveFile.map {
+      file =>
+        val writer = new FileWriter(file)
+        val laps = log.toArray(Array[Lap]())
 
-      for (lap <- laps) {
-        writer.write(s"${lap.number},${lap.time},${lap.getNote}\n")
-      }
-      writer.close()
+        for (lap <- laps) {
+          writer.write(s"${lap.number},${lap.time},${lap.getNote}\n")
+        }
+        writer.close()
     }
   }
 
