@@ -1,0 +1,23 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" name="fx-stopwatch">
+    <output-path>$PROJECT_DIR$/out/artifacts/fx_stopwatch</output-path>
+    <properties id="javafx-properties">
+      <options>
+        <option name="appClass" value="com.yumusoft.stopwatch.Main" />
+        <option name="description" value="" />
+        <option name="htmlParamFile" value="" />
+        <option name="nativeBundle" value="exe" />
+        <option name="paramFile" value="" />
+        <option name="title" value="Stopwatch" />
+        <option name="vendor" value="" />
+        <option name="width" value="300" />
+      </options>
+    </properties>
+    <root id="root">
+      <element id="archive" name="fx_stopwatch.jar">
+        <element id="module-output" name="fx-stopwatch" />
+      </element>
+      <element id="library" level="project" name="scala-library" />
+    </root>
+  </artifact>
+</component>
