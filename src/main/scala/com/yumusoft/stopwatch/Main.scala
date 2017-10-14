@@ -5,10 +5,11 @@
 
 package com.yumusoft.stopwatch
 
-import javafx.scene.{Scene, Parent}
+import java.beans.EventHandler
+import javafx.scene.{Parent, Scene}
 import javafx.fxml.FXMLLoader
-import javafx.stage.{StageStyle, Stage}
-import javafx.application.{Platform, Application}
+import javafx.stage.{Stage, StageStyle, WindowEvent}
+import javafx.application.{Application, Platform}
 
 class Main extends Application {
   private var primaryWindow: Option[Stage] = None
@@ -26,8 +27,14 @@ class Main extends Application {
     primaryStage.setScene(new Scene(root, 300, 420))
     primaryStage.setMinWidth(300)
     primaryStage.setMinHeight(200)
+    primaryStage.setAlwaysOnTop(true)
+    primaryStage.setOnHidden(new javafx.event.EventHandler[WindowEvent] {
+      override def handle(event: WindowEvent): Unit = rootController.doQuit(null)
+    })
 
     primaryWindow = Some(primaryStage)
+
+    Platform.setImplicitExit(true)
 
     primaryStage.show()
   }

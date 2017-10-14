@@ -133,6 +133,7 @@ class StopwatchController extends Initializable {
 
   @FXML
   def doQuit(event: ActionEvent) {
+    timer.cancel()
     Platform.exit()
   }
 
